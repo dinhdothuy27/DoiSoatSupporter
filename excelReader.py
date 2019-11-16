@@ -5,9 +5,9 @@ from openpyxl.styles import borders, fills, colors
 import os
 
 TRUOC_PATH = "truoc"
-TRUOC_COL = 9
+TRUOC_COL = 8
 SAU_PATH = "sau"
-SAU_COL = 9
+SAU_COL = 8
 STT_STR = "STT"
 
 def getFilesFromPath(path):
@@ -41,7 +41,12 @@ for file in sauFiles:
             startRow = i+1
     for i in range(startRow, endRow):
         maNhan = sheet.cell_value(i, 1).strip()
-        tien = sheet.cell_value(i, SAU_COL - 1)
+        strTien = str(sheet.cell_value(i, SAU_COL - 1)).replace(',','')
+        print(strTien)
+        if not strTien == "":
+            tien = float(strTien)
+        else:
+            tien = 0
         nhanMap[maNhan] = tien
 
 print("danh sach ma nhan: ", nhanMap)
@@ -62,14 +67,19 @@ for file in truocFiles:
     for i in range(nrows):
         celVal = str(sheet.cell_value(i, 0))
         celVal = celVal.strip().upper()
-        if startRow >= 0 and not celVal.replace('.','',1).isdigit():
+        if startRow >= 0 and not celVal.replace('.','',1).replace(',','').isdigit():
             endRow = i
             break
         if startRow == -1 and celVal == STT_STR:
             startRow = i+1
     for i in range(startRow, endRow):
         maNhan = str(sheet.cell_value(i, 1)).strip()
-        tien = sheet.cell_value(i, TRUOC_COL - 1)
+        strTien = str(sheet.cell_value(i, TRUOC_COL - 1)).replace(',','')
+        print(strTien)
+        if not strTien == "":
+            tien = float(strTien)
+        else:
+            tien = 0
         if maNhan in nhanMap:
             if nhanMap[maNhan] == tien:
                 nhanRows.append(i)
